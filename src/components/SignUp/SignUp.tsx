@@ -1,29 +1,56 @@
 import { useState } from "react";
-import { SignUpData} from "./SignUp.types.ts";
+import { validateEmail } from '../../utils/validation.ts';
+import { SignUpData, SignUpProps} from "./SignUp.types.ts";
 
-const SignUp = ()=> {
+const SignUp: React.FC<SignUpProps> = ({onSubmit})=> {
     //Handle the form data
     const [formData, setFormData] = useState<SignUpData>({
-        username: '',
+        name: '',
         email: '',
         password: '',
     });
 
+     //Handle the error messages, there are optionals
+    const [errors, setErrors] = useState<Partial<SignUpData>>({});
+    console.error(errors);
+
      //Handle changes in the form and update the state
-     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
 
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        const { name, email } = formData;
+
+        const newErrors: Partial<SignUpData> = {};
+
+        if (!name) newErrors.name = 'Name is required';
+        if (!email || !validateEmail(email)) newErrors.email = 'Valid email is required';
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+        } else {
+            onSubmit(formData);
+            setFormData({
+                name: '',
+                email: '',
+                password: '',
+            });
+            setErrors({});
+        }
+    };
+
     return (
-        <form>
-        <label htmlFor="username">
+        <form onSubmit={handleSubmit}>
+        <label htmlFor="name">
             Name
         <input
             type="text"
-            name="username"
-            placeholder="Username"
-            value={formData.username}
+            name="name"
+            placeholder="Name"
+            value={formData.name}
             onChange={handleChange}
         />
         </label>

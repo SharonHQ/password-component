@@ -1,5 +1,8 @@
 export interface SignUpData {
-    username: string;
+    name: string;
     email: string;
     password: string;
+}
+export interface SignUpProps {
+    onSubmit: (data: SignUpData) => void;
 }
