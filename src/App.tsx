@@ -5,7 +5,7 @@ import { SignUpData } from './components/SignUp/SignUp.types'
 function App() {
 
   const onSubmit = (formData: SignUpData) => 
-    alert(`${formData.username} Successful Registration`)
+    alert(`${formData.name} Successful Registration`)
   
 
   return (

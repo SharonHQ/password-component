@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { validateEmail } from '../../utils/validation.ts';
-import { SignUpData, SignUpProps} from "./SignUp.types.ts";
+import { validateEmail, validatePassword } from '../../utils/validation.ts';
+import { SignUpData, SignUpProps, SignUpErrors} from "./SignUp.types.ts";
 
 const SignUp: React.FC<SignUpProps> = ({onSubmit})=> {
     //Handle the form data
@@ -11,7 +11,8 @@ const SignUp: React.FC<SignUpProps> = ({onSubmit})=> {
     });
 
      //Handle the error messages, there are optionals
-    const [errors, setErrors] = useState<Partial<SignUpData>>({});
+    const [errors, setErrors] = useState<Partial<SignUpErrors>>({name: '',
+        email: '', password:{}});
     console.error(errors);
 
      //Handle changes in the form and update the state
@@ -22,12 +23,28 @@ const SignUp: React.FC<SignUpProps> = ({onSubmit})=> {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        const { name, email } = formData;
+        const { name, email, password } = formData;
 
-        const newErrors: Partial<SignUpData> = {};
+        const newErrors: Partial<SignUpErrors> = {password: {}};
 
         if (!name) newErrors.name = 'Name is required';
         if (!email || !validateEmail(email)) newErrors.email = 'Valid email is required';
+        // newErrors.password.hasSpecialChar = 'Password must be at least 8 characters';
+        if (!password) {
+            newErrors.password!.empty = 'Password is required';
+        }
+        if(!validatePassword(password).hasDigit) {
+            newErrors.password!.hasDigit = 'Password must be at least one digit'
+        }
+        if(validatePassword(password).hasNoConsecutiveLetters) {
+            newErrors.password!.hasNoConsecutiveLetters = 'Password must not have consecutive letters'
+        }
+        if(!validatePassword(password).hasSpecialChar) {
+            newErrors.password!.hasSpecialChar = 'Password must be at least one special Character'
+        }
+        if(!validatePassword(password).hasUppercaseLetter) {
+            newErrors.password!.hasUppercaseLetter = 'Password must be at least one uppercase letter'
+        }
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
@@ -38,7 +55,7 @@ const SignUp: React.FC<SignUpProps> = ({onSubmit})=> {
                 email: '',
                 password: '',
             });
-            setErrors({});
+            setErrors({password:{}});
         }
     };
 
