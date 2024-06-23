@@ -8,7 +8,6 @@ export interface SignUpProps {
 }
 
 export interface PasswordErrors {
-    empty: string;
     hasSpecialChar: string;
     hasDigit: string;
     hasUppercaseLetter: string;
@@ -18,5 +17,12 @@ export interface PasswordErrors {
 export interface SignUpErrors {
     name: string;
     email: string;
-    password: Partial<PasswordErrors> | undefined;
+    password: string;
+}
+
+export interface FormProps {
+    handleSubmit: (e: React.ChangeEvent<HTMLInputElement>) => void,
+    formData: SignUpData,
+    handleChange: (e: React.FormEvent) => void,
+    errors: Partial<SignUpErrors>
 }

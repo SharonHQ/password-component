@@ -1,13 +1,12 @@
+import { ValidatePassword } from "./Validation.types";
+
+// This function is validating the email address with regex
 export const validateEmail = (email: string): boolean => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(String(email).toLowerCase());
 };
-interface ValidatePassword {
-    hasSpecialChar: boolean,
-    hasDigit: boolean,
-    hasUppercaseLetter: boolean,
-    hasNoConsecutiveLetters: boolean,
-}
+
+// This function is validating the password and all requirements with regexs
 export const validatePassword = (password: string): ValidatePassword => {
     const specialCharRegex = /[!@#$%^&*]/;
     const digitRegex = /\d/;
